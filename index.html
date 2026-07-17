@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>タスタス 求人共有ツール</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>タスタス求人共有ツール</title>
   <style>
     :root {
-      --bg: #f6f8fa;
-      --surface: #ffffff;
-      --surface-soft: #f9fbfc;
+      --main: #1f8f8b;
+      --main-dark: #166f6c;
+      --bg: #f5f8fa;
+      --card: #ffffff;
       --text: #1f2933;
-      --muted: #64748b;
+      --sub: #667085;
       --line: #d9e2ec;
-      --line-strong: #b8c7d6;
-      --primary: #1769aa;
-      --primary-dark: #0f4f84;
-      --primary-soft: #e8f3fb;
-      --success: #16805d;
-      --shadow: 0 12px 30px rgba(31, 41, 51, 0.08);
-      --radius: 8px;
+      --accent: #e8f7f6;
+      --danger: #d64545;
     }
 
     * {
@@ -27,866 +23,707 @@
 
     body {
       margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
+        "Yu Gothic", "YuGothic", "Meiryo", sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-      font-size: 16px;
-      line-height: 1.65;
+      line-height: 1.7;
     }
 
-    button,
-    input,
-    textarea {
-      font: inherit;
+    header {
+      background: linear-gradient(135deg, var(--main), #3bb7b2);
+      color: #fff;
+      padding: 28px 18px;
+      text-align: center;
     }
 
-    .app {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 24px 18px 34px;
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
     }
 
-    .app-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 6px 2px 20px;
-    }
-
-    .app-title {
+    header p {
       margin: 0;
-      color: #102a43;
-      font-size: 28px;
-      line-height: 1.25;
-      letter-spacing: 0;
-    }
-
-    .app-subtitle {
-      margin: 8px 0 0;
-      color: var(--muted);
       font-size: 14px;
+      opacity: 0.95;
     }
 
-    .status-pill {
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--primary-dark);
-      padding: 8px 13px;
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .layout {
+    main {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 20px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 390px;
-      gap: 18px;
-      align-items: start;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .form-stack {
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
+    .section {
+      background: var(--card);
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--surface);
-      box-shadow: 0 1px 0 rgba(31, 41, 51, 0.03);
-      padding: 18px;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(31, 41, 51, 0.06);
+      margin-bottom: 16px;
     }
 
-    .card-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .card-title {
-      margin: 0;
-      color: #243b53;
+    .section h2 {
+      margin: 0 0 14px;
       font-size: 18px;
-      line-height: 1.35;
-      letter-spacing: 0;
-    }
-
-    .required-note {
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .field-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      border-left: 5px solid var(--main);
+      padding-left: 10px;
     }
 
     .field {
-      display: grid;
-      gap: 6px;
-      min-width: 0;
+      margin-bottom: 16px;
     }
 
-    .field.full {
-      grid-column: 1 / -1;
-    }
-
-    .field label.field-label {
-      color: #334e68;
-      font-size: 14px;
+    label.title {
+      display: block;
       font-weight: 700;
+      margin-bottom: 6px;
     }
 
     input[type="text"],
-    input[type="email"],
     input[type="date"],
     input[type="time"],
-    input[type="datetime-local"],
     input[type="number"],
     textarea {
       width: 100%;
-      min-width: 0;
-      height: 46px;
-      border: 1px solid var(--line-strong);
-      border-radius: 6px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
       background: #fff;
       color: var(--text);
-      padding: 10px 12px;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     textarea {
-      height: auto;
-      min-height: 104px;
+      min-height: 90px;
       resize: vertical;
     }
 
-    input:focus,
-    textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.14);
-    }
-
-    .choice-grid {
+    .choices {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .choice-grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
     }
 
     .choice {
       display: flex;
-      gap: 10px;
-      min-height: 50px;
-      align-items: center;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
-      border-radius: 7px;
-      background: var(--surface-soft);
-      padding: 11px 12px;
-      cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .choice:hover {
-      border-color: var(--line-strong);
+      border-radius: 10px;
       background: #fff;
+      cursor: pointer;
     }
 
     .choice input {
-      width: 20px;
-      height: 20px;
-      margin: 0;
-      accent-color: var(--primary);
-      flex: 0 0 auto;
+      margin-top: 6px;
     }
 
-    .choice span {
-      display: block;
-      min-width: 0;
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.45;
+    .choice:hover {
+      background: var(--accent);
+      border-color: var(--main);
     }
 
-    .choice:has(input:checked) {
-      border-color: var(--primary);
-      background: var(--primary-soft);
-      box-shadow: inset 0 0 0 1px rgba(23, 105, 170, 0.18);
-    }
-
-    .section-note {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .conditional {
-      display: none;
-      margin-top: 14px;
-      border-top: 1px solid var(--line);
-      padding-top: 14px;
-    }
-
-    .conditional.is-visible {
-      display: block;
-    }
-
-    .is-hidden {
-      display: none;
-    }
-
-    .job-content {
-      display: grid;
-      gap: 16px;
-    }
-
-    .content-group {
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      padding: 14px;
-      background: #fff;
-    }
-
-    .content-group h3 {
-      margin: 0 0 10px;
-      color: #334e68;
-      font-size: 15px;
-      letter-spacing: 0;
-    }
-
-    .output-panel {
-      position: sticky;
-      top: 18px;
-      border: 1px solid #c5d5e4;
-      border-radius: var(--radius);
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .output-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      border-bottom: 1px solid var(--line);
-      background: #f3f8fc;
-      padding: 14px;
-    }
-
-    .output-header h2 {
-      margin: 0;
-      color: #102a43;
-      font-size: 17px;
-      letter-spacing: 0;
-    }
-
-    .copy-message {
-      min-height: 22px;
-      margin: 0;
-      color: var(--success);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .output-body {
-      padding: 14px;
-    }
-
-    #shareOutput {
-      width: 100%;
-      min-height: 560px;
-      border: 1px solid var(--line-strong);
-      border-radius: 6px;
-      background: #fff;
-      color: #1f2933;
-      padding: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-      line-height: 1.7;
-      white-space: pre-wrap;
-    }
-
-    .output-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
+    .sub-box {
       margin-top: 12px;
+      padding: 14px;
+      background: #f8fbfc;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
     }
 
-    .output-actions button {
-      min-width: 120px;
+    .sub-title {
+      font-weight: 700;
+      margin: 10px 0 8px;
+      color: var(--main-dark);
     }
 
-    .copy-button,
-    .clear-button {
-      border-radius: 6px;
-      min-height: 42px;
-      padding: 9px 14px;
+    .hidden {
+      display: none;
+    }
+
+    .output-area {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+    }
+
+    #output {
+      width: 100%;
+      min-height: 520px;
+      white-space: pre-wrap;
+      background: #0f172a;
+      color: #f8fafc;
+      border: none;
+      border-radius: 14px;
+      padding: 18px;
       font-size: 14px;
-      font-weight: 800;
+      line-height: 1.8;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
     }
 
-    .copy-button {
-      border: 0;
-      background: var(--primary);
+    .copy-btn {
+      background: var(--main);
       color: #fff;
+      flex: 1;
     }
 
-    .copy-button:hover {
-      background: var(--primary-dark);
+    .copy-btn:hover {
+      background: var(--main-dark);
     }
 
-    .clear-button {
-      border: 1px solid var(--line-strong);
-      background: #fff;
-      color: #334e68;
+    .clear-btn {
+      background: #e5e7eb;
+      color: #111827;
     }
 
-    .clear-button:hover {
-      border-color: var(--primary);
-      background: #f7fbff;
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--main-dark);
+      font-weight: 700;
+      min-height: 20px;
     }
 
-    .copy-button:active,
-    .clear-button:active {
-      transform: translateY(1px);
+    .note {
+      color: var(--sub);
+      font-size: 13px;
+      margin-top: 4px;
     }
 
-    @media (max-width: 980px) {
-      .layout {
+    .required {
+      color: var(--danger);
+      font-size: 13px;
+      margin-left: 4px;
+    }
+
+    @media (max-width: 860px) {
+      main {
         grid-template-columns: 1fr;
+        padding: 14px;
       }
 
-      .basic-info-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .output-panel {
+      .output-area {
         position: static;
       }
 
-      #shareOutput {
+      #output {
         min-height: 360px;
       }
-    }
 
-    @media (max-width: 720px) {
-      .app {
-        padding: 16px 12px 24px;
-      }
-
-      .app-header {
-        display: block;
-        padding-bottom: 14px;
-      }
-
-      .app-title {
-        font-size: 23px;
-      }
-
-      .status-pill {
-        display: inline-flex;
-        margin-top: 12px;
-      }
-
-      .card {
-        padding: 15px;
-      }
-
-      .card-header {
-        display: block;
-      }
-
-      .required-note {
-        display: block;
-        margin-top: 4px;
-      }
-
-      .field-grid,
-      .basic-info-grid,
-      .choice-grid,
-      .choice-grid.three {
-        grid-template-columns: 1fr;
-      }
-
-      .choice {
-        min-height: 54px;
-      }
-
-      .output-header {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .output-actions {
-        width: 100%;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .copy-button,
-      .clear-button {
-        width: 100%;
+      header h1 {
+        font-size: 21px;
       }
     }
   </style>
 </head>
+
 <body>
-  <main class="app">
-    <header class="app-header">
-      <div>
-        <h1 class="app-title">タスタス 求人共有ツール</h1>
-        <p class="app-subtitle">商談時に確認した求人情報を入力し、システム説明担当への共有文を自動生成します。</p>
-      </div>
-      <div class="status-pill">入力内容は自動反映</div>
-    </header>
+  <header>
+    <h1>タスタス求人共有ツール</h1>
+    <p>営業確認内容を入力すると、システム説明担当への共有文を自動生成できます。</p>
+  </header>
 
-    <div class="layout">
-      <form id="jobForm" class="form-stack">
-        <section class="card">
-          <div class="card-header">
-            <h2 class="card-title">1. 基本情報</h2>
-          </div>
-          <div class="field-grid basic-info-grid">
-            <div class="field">
-              <label class="field-label" for="facilityName">施設名</label>
-              <input id="facilityName" type="text" autocomplete="organization" placeholder="例：タスタスケア施設">
-            </div>
-            <div class="field">
-              <label class="field-label" for="clientName">先方担当者</label>
-              <input id="clientName" type="text" autocomplete="name" placeholder="例：佐藤様">
-            </div>
-            <div class="field">
-              <label class="field-label" for="clientEmail">メールアドレス</label>
-              <input id="clientEmail" type="email" autocomplete="email" inputmode="email" placeholder="例：sample@example.com">
-            </div>
-            <div class="field">
-              <label class="field-label" for="salesName">営業担当名</label>
-              <input id="salesName" type="text" autocomplete="name" placeholder="例：山田">
-            </div>
-            <div class="field">
-              <label class="field-label" for="briefingDate">システム説明日時</label>
-              <input id="briefingDate" type="datetime-local">
-            </div>
-          </div>
-        </section>
+  <main>
+    <form id="form">
+      <section class="section">
+        <h2>1. 基本情報</h2>
 
-        <section class="card">
-          <div class="card-header">
-            <h2 class="card-title">2. 求人公開時期</h2>
-          </div>
-          <div class="choice-grid">
+        <div class="field">
+          <label class="title" for="facility">施設名<span class="required">任意</span></label>
+          <input type="text" id="facility" placeholder="例）〇〇介護老人保健施設" />
+        </div>
+
+        <div class="field">
+          <label class="title" for="sales">営業担当名<span class="required">任意</span></label>
+          <input type="text" id="sales" placeholder="例）鈴木" />
+        </div>
+
+        <div class="field">
+          <label class="title" for="systemDate">システム説明日<span class="required">任意</span></label>
+          <input type="date" id="systemDate" />
+        </div>
+
+        <div class="field">
+          <label class="title" for="systemTime">システム説明時間<span class="required">任意</span></label>
+          <input type="time" id="systemTime" />
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>2. 求人公開時期</h2>
+
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="publishTiming" value="すぐに求人を公開したい" />
+            <span>すぐに求人を公開したい</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="publishTiming" value="1〜2週間先から求人を公開したい" />
+            <span>1〜2週間先から求人を公開したい</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="publishTiming" value="来月以降に求人を公開したい" />
+            <span>来月以降に求人を公開したい</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="publishTiming" value="公開予定はないが、登録・システム説明のみ" />
+            <span>公開予定はないが、登録・システム説明のみ</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="section" id="scheduleStatusSection">
+        <h2>3. 日程状況</h2>
+
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="scheduleStatus" value="日程確定済" />
+            <span>日程確定済</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="scheduleStatus" value="日程未確定" />
+            <span>日程未確定</span>
+          </label>
+        </div>
+
+        <p class="note">※公開予定なしの場合は任意です。</p>
+      </section>
+
+      <section class="section hidden" id="confirmedSection">
+        <h2>4. 日程確定済の場合</h2>
+
+        <div class="field">
+          <label class="title" for="confirmedSlots">月内の募集枠数</label>
+          <input type="number" id="confirmedSlots" min="0" placeholder="例）20" />
+        </div>
+
+        <div class="field">
+          <label class="title" for="confirmedNote">補足</label>
+          <textarea id="confirmedNote" placeholder="例）7月中に日勤中心で20枠程度。詳細日程はシステム説明時に確認予定。"></textarea>
+        </div>
+      </section>
+
+      <section class="section hidden" id="unconfirmedSection">
+        <h2>4. 日程未確定の場合</h2>
+
+        <div class="field">
+          <label class="title">未確定理由</label>
+
+          <div class="choices">
             <label class="choice">
-              <input type="radio" name="publishTiming" value="すぐに求人を公開したい">
-              <span>すぐに求人を公開したい</span>
+              <input type="checkbox" name="reason" value="シフト未確定" />
+              <span>シフト未確定</span>
             </label>
+
             <label class="choice">
-              <input type="radio" name="publishTiming" value="1〜2週間先から求人を公開したい">
-              <span>1〜2週間先から求人を公開したい</span>
+              <input type="checkbox" name="reason" value="欠員日が未確定" />
+              <span>欠員日が未確定</span>
             </label>
+
             <label class="choice">
-              <input type="radio" name="publishTiming" value="来月以降に求人を公開したい">
-              <span>来月以降に求人を公開したい</span>
+              <input type="checkbox" name="reason" value="募集人数が未確定" />
+              <span>募集人数が未確定</span>
             </label>
+
             <label class="choice">
-              <input type="radio" name="publishTiming" value="公開予定はないが、登録・システム説明のみ">
-              <span>公開予定はないが、登録・システム説明のみ</span>
+              <input type="checkbox" name="reason" value="勤務時間が未確定" />
+              <span>勤務時間が未確定</span>
             </label>
-          </div>
-        </section>
 
-        <section id="scheduleSection" class="card">
-          <div class="card-header">
-            <h2 class="card-title">3. 日程状況</h2>
-          </div>
-          <p class="section-note" id="scheduleNote">求人公開時期に対する日程状況を選択してください。</p>
-          <div class="choice-grid">
             <label class="choice">
-              <input type="radio" name="scheduleStatus" value="日程確定済">
-              <span>日程確定済</span>
+              <input type="checkbox" name="reason" value="施設側で確認中" />
+              <span>施設側で確認中</span>
             </label>
+
             <label class="choice">
-              <input type="radio" name="scheduleStatus" value="日程未確定">
-              <span>日程未確定</span>
+              <input type="checkbox" name="reason" value="その他" />
+              <span>その他</span>
             </label>
-          </div>
-
-          <div id="confirmedFields" class="conditional">
-            <div class="field-grid">
-              <div class="field">
-                <label class="field-label" for="confirmedSlots">月内の募集枠数</label>
-                <input id="confirmedSlots" type="number" min="0" inputmode="numeric" placeholder="例：3">
-              </div>
-              <div class="field full">
-                <label class="field-label" for="confirmedNote">日程確定済の補足</label>
-                <textarea id="confirmedNote" placeholder="例：具体的な日程等"></textarea>
-              </div>
-            </div>
-          </div>
-
-          <div id="unconfirmedFields" class="conditional">
-            <div class="field-grid">
-              <div class="field">
-                <label class="field-label" for="expectedSlots">想定する月内の募集枠数</label>
-                <input id="expectedSlots" type="number" min="0" inputmode="numeric" placeholder="例：5">
-              </div>
-              <div class="field full">
-                <label class="field-label">日程未確定理由</label>
-                <div class="choice-grid three">
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="準備中（日程待ち）">
-                    <span>準備中（日程待ち）</span>
-                  </label>
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="シフト未確定">
-                    <span>シフト未確定</span>
-                  </label>
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="他社単発優先">
-                    <span>他社単発優先</span>
-                  </label>
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="充足検討中">
-                    <span>充足検討中</span>
-                  </label>
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="教育余裕なし">
-                    <span>教育余裕なし</span>
-                  </label>
-                  <label class="choice">
-                    <input type="checkbox" name="undecidedReason" value="その他">
-                    <span>その他</span>
-                  </label>
-                </div>
-              </div>
-              <div class="field full">
-                <label class="field-label" for="unconfirmedNote">日程未確定の補足</label>
-                <textarea id="unconfirmedNote" placeholder="例：来週中に施設側でシフト確認予定"></textarea>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="jobTypeSection" class="card">
-          <div class="card-header">
-            <h2 class="card-title">4. 募集職種</h2>
-            <span class="required-note">複数選択可</span>
-          </div>
-          <div class="choice-grid">
-            <label class="choice">
-              <input type="checkbox" name="jobType" value="正看護師">
-              <span>正看護師</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="jobType" value="准看護師">
-              <span>准看護師</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="jobType" value="介護士">
-              <span>介護士</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="jobType" value="ヘルパー">
-              <span>ヘルパー</span>
-            </label>
-          </div>
-        </section>
-
-        <section id="jobContentSection" class="card">
-          <div class="card-header">
-            <h2 class="card-title">5. 求人内容</h2>
-            <span class="required-note">複数選択可</span>
-          </div>
-          <div class="job-content">
-            <div class="content-group">
-              <h3>テンプレ作成の有無</h3>
-              <div class="choice-grid three">
-                <label class="choice">
-                  <input type="radio" name="templateStatus" value="あり">
-                  <span>あり</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="templateStatus" value="なし">
-                  <span>なし</span>
-                </label>
-                <label class="choice">
-                  <input type="radio" name="templateStatus" value="確認中">
-                  <span>確認中</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="content-group">
-              <h3>単発求人</h3>
-              <div class="choice-grid three">
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="スポット">
-                  <span>スポット</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="午前">
-                  <span>午前</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="午後">
-                  <span>午後</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="日勤">
-                  <span>日勤</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="夜勤">
-                  <span>夜勤</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="content-group">
-              <h3>初回お試し求人</h3>
-              <div class="choice-grid">
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="まずは1回勤務してもらいたい">
-                  <span>まずは1回勤務してもらいたい</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="相性が良ければ継続勤務につなげたい">
-                  <span>相性が良ければ継続勤務につなげたい</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="単発求人として出し、継続相談の可能性あり">
-                  <span>単発求人として出し、継続相談の可能性あり</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="content-group">
-              <h3>説明会求人</h3>
-              <div class="choice-grid">
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="勤務前に説明会・面談・顔合わせを行いたい">
-                  <span>勤務前に説明会・面談・顔合わせを行いたい</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="継続勤務できる人材を探したい">
-                  <span>継続勤務できる人材を探したい</span>
-                </label>
-                <label class="choice">
-                  <input type="checkbox" name="jobContent" value="採用・長期稼働前提で進めたい">
-                  <span>採用・長期稼働前提で進めたい</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="content-group">
-              <h3>求人内容の補足</h3>
-              <textarea id="jobMemo" placeholder="例：応募条件・給与・その他必要事項等"></textarea>
-            </div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="card-header">
-            <h2 class="card-title">6. 補足入力</h2>
-          </div>
-          <div class="field-grid">
-            <div class="field full">
-              <label class="field-label" for="handoffMemo">営業からシステム説明担当への申し送り</label>
-              <textarea id="handoffMemo" placeholder="例：システム説明時に確認・対応してほしい内容、その他共有事項"></textarea>
-            </div>
-          </div>
-        </section>
-      </form>
-
-      <aside class="output-panel" aria-label="生成された共有文">
-        <div class="output-header">
-          <div>
-            <h2>生成された共有文</h2>
-            <p id="copyMessage" class="copy-message" aria-live="polite"></p>
           </div>
         </div>
-        <div class="output-body">
-          <textarea id="shareOutput" readonly></textarea>
-          <div class="output-actions">
-            <button id="clearButton" class="clear-button" type="button">クリア</button>
-            <button id="copyButton" class="copy-button" type="button">コピー</button>
+
+        <div class="field">
+          <label class="title" for="unconfirmedSlots">想定する月内の募集枠数</label>
+          <input type="number" id="unconfirmedSlots" min="0" placeholder="例）10" />
+        </div>
+
+        <div class="field">
+          <label class="title" for="unconfirmedNote">補足</label>
+          <textarea id="unconfirmedNote" placeholder="例）シフト確定後に日程調整予定。午前帯で募集する可能性あり。"></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>5. 募集職種</h2>
+
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="jobType" value="看護師" />
+            <span>看護師</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="jobType" value="介護士" />
+            <span>介護士</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="jobType" value="看護師・介護士どちらも" />
+            <span>看護師・介護士どちらも</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>6. 求人内容</h2>
+
+        <div class="field">
+          <label class="title">求人種別</label>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="jobCategory" value="単発求人" />
+              <span>単発求人</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="jobCategory" value="初回お試し求人" />
+              <span>初回お試し求人</span>
+            </label>
+
+            <label class="choice">
+              <input type="radio" name="jobCategory" value="説明会求人" />
+              <span>説明会求人</span>
+            </label>
           </div>
         </div>
-      </aside>
-    </div>
+
+        <div id="spotJobDetails" class="sub-box hidden">
+          <div class="sub-title">単発求人の詳細</div>
+          <div class="choices">
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="スポット" />
+              <span>スポット</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="午前" />
+              <span>午前</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="午後" />
+              <span>午後</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="日勤" />
+              <span>日勤</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="夜勤" />
+              <span>夜勤</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="trialJobDetails" class="sub-box hidden">
+          <div class="sub-title">初回お試し求人の詳細</div>
+          <div class="choices">
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="まずは1回勤務してもらいたい" />
+              <span>まずは1回勤務してもらいたい</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="勤務後に施設・ワーカー双方で継続可否を判断したい" />
+              <span>勤務後に施設・ワーカー双方で継続可否を判断したい</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="良い方がいれば次回以降の勤務相談につなげたい" />
+              <span>良い方がいれば次回以降の勤務相談につなげたい</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="briefingJobDetails" class="sub-box hidden">
+          <div class="sub-title">説明会求人の詳細</div>
+          <div class="choices">
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="勤務前に説明会・面談・顔合わせを行いたい" />
+              <span>勤務前に説明会・面談・顔合わせを行いたい</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="継続勤務できる人材を探したい" />
+              <span>継続勤務できる人材を探したい</span>
+            </label>
+
+            <label class="choice">
+              <input type="checkbox" name="jobDetail" value="採用・長期稼働前提で進めたい" />
+              <span>採用・長期稼働前提で進めたい</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>7. 補足入力</h2>
+
+        <div class="field">
+          <label class="title" for="jobNote">求人内容の補足</label>
+          <textarea id="jobNote" placeholder="例）まずは午前の単発求人で反応を見たい。"></textarea>
+        </div>
+
+        <div class="field">
+          <label class="title" for="handoffNote">営業からシステム説明担当への申し送り</label>
+          <textarea id="handoffNote" placeholder="例）システム説明時に求人登録まで進められる可能性があります。"></textarea>
+        </div>
+      </section>
+    </form>
+
+    <aside class="output-area">
+      <section class="section">
+        <h2>共有文</h2>
+        <textarea id="output" readonly></textarea>
+
+        <div class="button-row">
+          <button type="button" class="copy-btn" id="copyBtn">共有文をコピー</button>
+          <button type="button" class="clear-btn" id="clearBtn">入力をクリア</button>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+    </aside>
   </main>
 
   <script>
-    const form = document.getElementById("jobForm");
-    const shareOutput = document.getElementById("shareOutput");
-    const copyButton = document.getElementById("copyButton");
-    const clearButton = document.getElementById("clearButton");
-    const copyMessage = document.getElementById("copyMessage");
-    const confirmedFields = document.getElementById("confirmedFields");
-    const unconfirmedFields = document.getElementById("unconfirmedFields");
-    const scheduleSection = document.getElementById("scheduleSection");
-    const jobTypeSection = document.getElementById("jobTypeSection");
-    const jobContentSection = document.getElementById("jobContentSection");
+    const form = document.getElementById("form");
+    const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const status = document.getElementById("status");
 
-    const registrationOnlyValue = "公開予定はないが、登録・システム説明のみ";
-    const getValue = (id) => document.getElementById(id).value.trim();
-    const getCheckedValue = (name) => {
-      const selected = form.querySelector(`input[name="${name}"]:checked`);
-      return selected ? selected.value : "";
-    };
-    const getCheckedValues = (name) => {
-      return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map((input) => input.value);
-    };
-    const formatList = (items) => items.length ? items.map((item) => `・${item}`).join("\n") : "";
-    const isRegistrationOnly = () => getCheckedValue("publishTiming") === registrationOnlyValue;
-    const visibleOrNotNeeded = (value) => isRegistrationOnly() ? "入力不要" : value;
+    const confirmedSection = document.getElementById("confirmedSection");
+    const unconfirmedSection = document.getElementById("unconfirmedSection");
+    const scheduleStatusSection = document.getElementById("scheduleStatusSection");
 
-    function formatDateTime(value) {
-      if (!value) return "";
-      const [datePart, timePart] = value.split("T");
-      if (!datePart) return "";
-      const [year, month, day] = datePart.split("-");
-      return timePart ? `${year}/${month}/${day} ${timePart}` : `${year}/${month}/${day}`;
+    const spotJobDetails = document.getElementById("spotJobDetails");
+    const trialJobDetails = document.getElementById("trialJobDetails");
+    const briefingJobDetails = document.getElementById("briefingJobDetails");
+
+    function getRadioValue(name) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : "";
     }
 
-    function updateVisibility() {
-      const hideJobInputs = isRegistrationOnly();
-      const scheduleStatus = getCheckedValue("scheduleStatus");
-
-      scheduleSection.classList.toggle("is-hidden", hideJobInputs);
-      jobTypeSection.classList.toggle("is-hidden", hideJobInputs);
-      jobContentSection.classList.toggle("is-hidden", hideJobInputs);
-      confirmedFields.classList.toggle("is-visible", !hideJobInputs && scheduleStatus === "日程確定済");
-      unconfirmedFields.classList.toggle("is-visible", !hideJobInputs && scheduleStatus === "日程未確定");
+    function getCheckboxValues(name) {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+        .map((item) => item.value);
     }
 
-    function buildSupplement() {
-      if (isRegistrationOnly()) return "";
-
-      const lines = [];
-      const scheduleStatus = getCheckedValue("scheduleStatus");
-      const confirmedNote = getValue("confirmedNote");
-      const unconfirmedNote = getValue("unconfirmedNote");
-      const undecidedReasons = getCheckedValues("undecidedReason");
-      const jobMemo = getValue("jobMemo");
-
-      if (scheduleStatus === "日程確定済" && confirmedNote) {
-        lines.push(`日程確定済の補足：${confirmedNote}`);
-      }
-
-      if (scheduleStatus === "日程未確定") {
-        if (undecidedReasons.length) {
-          lines.push(`日程未確定理由：${undecidedReasons.join("、")}`);
-        }
-        if (unconfirmedNote) {
-          lines.push(`日程未確定の補足：${unconfirmedNote}`);
-        }
-      }
-
-      if (jobMemo) {
-        lines.push(`求人内容の補足：${jobMemo}`);
-      }
-
-      return lines.join("\n");
+    function formatDate(dateValue) {
+      if (!dateValue) return "";
+      const date = new Date(dateValue + "T00:00:00");
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${month}月${day}日`;
     }
 
-    function getSlotsText() {
-      if (isRegistrationOnly()) return "入力不要";
+    function updateDisplay() {
+      const publishTiming = getRadioValue("publishTiming");
+      const scheduleStatus = getRadioValue("scheduleStatus");
+      const jobCategory = getRadioValue("jobCategory");
 
-      const scheduleStatus = getCheckedValue("scheduleStatus");
+      const noPublish = publishTiming === "公開予定はないが、登録・システム説明のみ";
+
+      if (noPublish) {
+        scheduleStatusSection.style.opacity = "0.45";
+      } else {
+        scheduleStatusSection.style.opacity = "1";
+      }
+
+      confirmedSection.classList.toggle("hidden", scheduleStatus !== "日程確定済");
+      unconfirmedSection.classList.toggle("hidden", scheduleStatus !== "日程未確定");
+
+      spotJobDetails.classList.toggle("hidden", jobCategory !== "単発求人");
+      trialJobDetails.classList.toggle("hidden", jobCategory !== "初回お試し求人");
+      briefingJobDetails.classList.toggle("hidden", jobCategory !== "説明会求人");
+    }
+
+    function generateText() {
+      const facility = document.getElementById("facility").value.trim();
+      const sales = document.getElementById("sales").value.trim();
+      const systemDate = formatDate(document.getElementById("systemDate").value);
+      const systemTime = document.getElementById("systemTime").value;
+      const systemDateTime = [systemDate, systemTime].filter(Boolean).join(" ");
+
+      const publishTiming = getRadioValue("publishTiming");
+      const scheduleStatus = getRadioValue("scheduleStatus");
+      const jobType = getRadioValue("jobType");
+
+      const confirmedSlots = document.getElementById("confirmedSlots").value.trim();
+      const confirmedNote = document.getElementById("confirmedNote").value.trim();
+
+      const unconfirmedSlots = document.getElementById("unconfirmedSlots").value.trim();
+      const unconfirmedNote = document.getElementById("unconfirmedNote").value.trim();
+
+      const reasons = getCheckboxValues("reason");
+
+      const jobCategory = getRadioValue("jobCategory");
+      const jobDetails = getCheckboxValues("jobDetail");
+
+      const jobNote = document.getElementById("jobNote").value.trim();
+      const handoffNote = document.getElementById("handoffNote").value.trim();
+
+      let slotsText = "";
+      let scheduleExtra = "";
+      let noteText = "";
+
       if (scheduleStatus === "日程確定済") {
-        const slots = getValue("confirmedSlots");
-        return slots ? `${slots}枠` : "";
+        slotsText = confirmedSlots ? `${confirmedSlots}枠` : "";
+        noteText = confirmedNote;
       }
 
       if (scheduleStatus === "日程未確定") {
-        const slots = getValue("expectedSlots");
-        return slots ? `想定 ${slots}枠` : "";
+        slotsText = unconfirmedSlots ? `${unconfirmedSlots}枠想定` : "";
+        scheduleExtra = reasons.length ? `未確定理由：${reasons.join("、")}` : "";
+        noteText = unconfirmedNote;
       }
 
-      return "";
-    }
+      const jobContentText = jobCategory
+        ? `求人種別：${jobCategory}\n詳細：\n${jobDetails.length ? jobDetails.map((item) => `・${item}`).join("\n") : ""}`
+        : "";
 
-    function generateShareText() {
-      const jobContent = getCheckedValues("jobContent");
-      const jobTypes = getCheckedValues("jobType");
+      const finalNote = [scheduleExtra, noteText, jobNote]
+        .filter(Boolean)
+        .join("\n");
+
+      const autoHandoff = createAutoHandoff({
+        publishTiming,
+        scheduleStatus,
+        slotsText,
+        jobCategory,
+        jobDetails,
+        handoffNote
+      });
+
       const text = `【求人共有】
 
-施設名：${getValue("facilityName")}
-先方担当者：${getValue("clientName")}
-メールアドレス：${getValue("clientEmail")}
-営業担当：${getValue("salesName")}
-システム説明日：${formatDateTime(getValue("briefingDate"))}
+施設名：${facility}
+営業担当：${sales}
+システム説明日時：${systemDateTime}
 
-求人公開時期：${getCheckedValue("publishTiming")}
-日程状況：${visibleOrNotNeeded(getCheckedValue("scheduleStatus"))}
-募集職種：${visibleOrNotNeeded(jobTypes.join("、"))}
-月内募集枠数：${getSlotsText()}
+求人公開時期：${publishTiming}
+日程状況：${scheduleStatus}
+募集職種：${jobType}
+月内募集枠数：${slotsText}
 
 求人内容：
-${isRegistrationOnly() ? "入力不要" : formatList(jobContent)}
-
-テンプレ作成：${visibleOrNotNeeded(getCheckedValue("templateStatus"))}
+${jobContentText}
 
 補足：
-${buildSupplement()}
+${finalNote}
 
 【申し送り】
 
 システム説明時に確認・対応してほしい内容：
-${getValue("handoffMemo")}`;
+${autoHandoff}`;
 
-      shareOutput.value = text;
+      output.value = text;
     }
 
-    function updateApp() {
-      updateVisibility();
-      generateShareText();
-    }
+    function createAutoHandoff(data) {
+      const { publishTiming, scheduleStatus, slotsText, jobCategory, handoffNote } = data;
 
-    async function copyShareText() {
-      try {
-        await navigator.clipboard.writeText(shareOutput.value);
-      } catch (error) {
-        shareOutput.select();
-        document.execCommand("copy");
+      if (handoffNote) {
+        return handoffNote;
       }
 
-      copyMessage.textContent = "コピーしました";
-      window.setTimeout(() => {
-        copyMessage.textContent = "";
-      }, 2200);
+      if (publishTiming === "公開予定はないが、登録・システム説明のみ") {
+        return "今回は求人公開予定はないため、登録・操作説明を中心にお願いします。今後求人を出す可能性があるかも確認してください。";
+      }
+
+      if (scheduleStatus === "日程確定済") {
+        return `求人登録まで進められる可能性があります。月内募集枠数${slotsText ? "（" + slotsText + "）" : ""}、勤務時間帯、詳細日程を確認しながら、求人作成までサポートをお願いします。`;
+      }
+
+      if (scheduleStatus === "日程未確定") {
+        return "日程は未確定のため、システム説明時に不足している情報を確認してください。想定枠数、勤務時間帯、公開開始時期を整理したうえで、求人作成の準備まで進めてください。";
+      }
+
+      if (jobCategory === "説明会求人") {
+        return "説明会求人として進める可能性があります。勤務前の説明会・面談・顔合わせの流れを確認してください。";
+      }
+
+      if (jobCategory === "初回お試し求人") {
+        return "初回お試し求人として進める可能性があります。1回勤務後の継続可否の確認方法や、次回以降の勤務相談の流れを確認してください。";
+      }
+
+      return "システム説明時に求人公開の意向、日程状況、募集枠数、勤務時間帯を確認してください。";
     }
 
-    function clearInputs() {
+    document.querySelectorAll('input[name="jobCategory"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        document.querySelectorAll('input[name="jobDetail"]').forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+
+        updateDisplay();
+        generateText();
+      });
+    });
+
+    form.addEventListener("input", () => {
+      updateDisplay();
+      generateText();
+      status.textContent = "";
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(output.value);
+        status.textContent = "コピーしました";
+      } catch (error) {
+        output.select();
+        document.execCommand("copy");
+        status.textContent = "コピーしました";
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
       form.reset();
-      copyMessage.textContent = "入力内容をクリアしました";
-      updateApp();
-      window.setTimeout(() => {
-        copyMessage.textContent = "";
-      }, 2200);
-    }
+      updateDisplay();
+      generateText();
+      status.textContent = "入力をクリアしました";
+    });
 
-    form.addEventListener("input", updateApp);
-    form.addEventListener("change", updateApp);
-    copyButton.addEventListener("click", copyShareText);
-    clearButton.addEventListener("click", clearInputs);
-    updateApp();
+    updateDisplay();
+    generateText();
   </script>
 </body>
 </html>
